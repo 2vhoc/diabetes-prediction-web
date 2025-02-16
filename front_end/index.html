@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dự đoán nguy cơ tiểu đường</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 30px 0;
+            background: #ffffff;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+        }
+        
+        .form-container {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        
+        .unit {
+            position: absolute;
+            right: 10px;
+            top: 40px;
+            color: #666;
+        }
+        
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            margin-left: 5px;
+            color: #666;
+            cursor: help;
+        }
+        
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 14px;
+        }
+        
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        button {
+            background: #3498db;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #2980b9;
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .high-risk {
+            background: #fee2e2;
+            border: 1px solid #ef4444;
+            color: #991b1b;
+        }
+        
+        .low-risk {
+            background: #dcfce7;
+            border: 1px solid #22c55e;
+            color: #166534;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .copyright {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .copyright strong {
+            color: #2c3e50;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            .form-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Dự đoán nguy cơ tiểu đường</h1>
+            <p>Nhập thông tin của bạn để đánh giá nguy cơ mắc bệnh tiểu đường</p>
+        </div>
+
+        <div class="form-container">
+            <form id="diabetesForm">
+                <div class="form-group">
+                    <label>Số lần mang thai:</label>
+                    <input type="number" id="pregnancies" required min="0">
+                </div>
+
+                <div class="form-group">
+                    <label>Glucose <span class="tooltip">ℹ️
+                        <span class="tooltip-text">Nồng độ glucose trong huyết tương sau 2 giờ trong xét nghiệm dung nạp glucose đường uống</span>
+                    </span></label>
+                    <input type="number" id="glucose" required min="0">
+                    <span class="unit">mg/dL</span>
+                </div>
+
+                <div class="form-group">
+                    <label>Huyết áp <span class="tooltip">ℹ️
+                        <span class="tooltip-text">Áp lực máu tâm trương</span>
+                    </span></label>
+                    <input type="number" id="bloodPressure" required min="0">
+                    <span class="unit">mm Hg</span>
+                </div>
+
+                <div class="form-group">
+                    <label>Độ dày nếp gấp da <span class="tooltip">ℹ️
+                        <span class="tooltip-text">Độ dày nếp gấp da vùng cơ tam đầu</span>
+                    </span></label>
+                    <input type="number" id="skinThickness" required min="0">
+                    <span class="unit">mm</span>
+                </div>
+
+                <div class="form-group">
+                    <label>Insulin <span class="tooltip">ℹ️
+                        <span class="tooltip-text">Insulin trong huyết thanh 2 giờ</span>
+                    </span></label>
+                    <input type="number" id="insulin" required min="0">
+                    <span class="unit">µU/ml</span>
+                </div>
+
+                <div class="form-group">
+                    <label>BMI <span class="tooltip">ℹ️
+                        <span class="tooltip-text">Chỉ số khối cơ thể (cân nặng tính bằng kg/(chiều cao tính bằng m)²)</span>
+                    </span></label>
+                    <input type="number" id="bmi" step="0.1" required min="0">
+                    <span class="unit">kg/m²</span>
+                </div>
+
+                <div class="form-group">
+                    <label>Diabetes Pedigree Function <span class="tooltip">ℹ️
+                        <span class="tooltip-text">Hàm phả hệ tiểu đường dựa trên tiền sử gia đình</span>
+                    </span></label>
+                    <input type="number" id="pedigreeFunction" step="0.001" required min="0">
+                </div>
+
+                <div class="form-group">
+                    <label>Tuổi:</label>
+                    <input type="number" id="age" required min="0">
+                    <span class="unit">năm</span>
+                </div>
+
+                <button type="submit">Dự đoán nguy cơ</button>
+            </form>
+
+            <div id="result" class="result"></div>
+        </div>
+
+        <div class="footer">
+            <p class="copyright">© 2024 <strong>Vũ Văn Học</strong>. All rights reserved.</p>
+            <p class="copyright">Diabetes Risk Prediction System</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('diabetesForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Lấy giá trị từ form
+            const formData = {
+                Pregnancies: parseInt(document.getElementById('pregnancies').value),
+                Glucose: parseInt(document.getElementById('glucose').value),
+                Insulin: parseInt(document.getElementById('insulin').value),
+                Age: parseInt(document.getElementById('age').value),
+                BloodPressure: parseInt(document.getElementById('bloodPressure').value),
+                SkinThickness: parseInt(document.getElementById('skinThickness').value),
+                BMI: parseFloat(document.getElementById('bmi').value),
+                DiabetesPedigreeFunction: parseFloat(document.getElementById('pedigreeFunction').value)
+            };
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            function displayResult(data){
+                console.log(data)
+                if (data == 1) {
+                resultDiv.className = 'result high-risk';
+                resultDiv.innerHTML = `
+                    <h3>Kết quả đánh giá sơ bộ:</h3>
+                    <p>Dựa trên thông tin bạn cung cấp, bạn có thể có nguy cơ cao mắc bệnh tiểu đường.
+                    Vui lòng tham khảo ý kiến bác sĩ để được tư vấn chi tiết.</p>
+                `;
+            } else {
+                resultDiv.className = 'result low-risk';
+                resultDiv.innerHTML = `
+                    <h3>Kết quả đánh giá sơ bộ:</h3>
+                    <p>Dựa trên thông tin bạn cung cấp, bạn có nguy cơ thấp mắc bệnh tiểu đường.
+                    Tuy nhiên, bạn nên duy trì lối sống lành mạnh và kiểm tra sức khỏe định kỳ.</p>
+                `;
+            }
+
+            }
+
+
+            // Code để kết nối với backend API:
+
+            fetch('/form', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                displayResult(data.prediction);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+
+</html>

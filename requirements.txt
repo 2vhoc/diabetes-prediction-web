@@ -1,0 +1,11 @@
+numpy~=1.26.4
+fastapi~=0.115.8
+pydantic~=2.10.6
+joblib~=1.4.2
+scikit-learn~=1.6.1
+pandas~=2.2.3
+seaborn~=0.13.2
+matplotlib~=3.10.0
+
+# sudo docker build -t project .
+# sudo docker run --rm -v $(pwd):/app -p 8000:8000 project
