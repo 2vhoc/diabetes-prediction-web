@@ -10,6 +10,13 @@ import base64
 from joblib import load
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 class Form(BaseModel):
     pregnancies: Union[int, float] = 0
