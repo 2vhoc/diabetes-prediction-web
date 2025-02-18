@@ -40,7 +40,7 @@ cd diabetes-prediction-web
 
 2. Build the Docker image:
 ```bash
-sudo docker build -t prj .
+sudo docker build -t project .
 ```
 
 3. Run the container:
